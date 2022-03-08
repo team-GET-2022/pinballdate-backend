@@ -4,6 +4,7 @@ require ('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const getPinball = require('./pinball.js');
 
 const app = express();
 app.use(cors());
@@ -17,6 +18,8 @@ db.on('error', console.error.bind(console, 'connection error'));
 db.once('open', function(){
   console.log('mongoose is connected');
 });
+
+app.get('/pinball', getPinball);
 
 app.get('/test', (request, response) => {
   response.status(200).send('test request received');
