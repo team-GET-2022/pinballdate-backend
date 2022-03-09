@@ -1,4 +1,4 @@
-/* 
+/*
 This route accesses the Yelp API and sends raw search results from Yelp. 
 You can review the Yelp docs here: https://www.yelp.com/developers/documentation/v3/business_search
 */
@@ -12,16 +12,16 @@ async function getRestaurants(request, response, next) {
 
     let url = `https://api.yelp.com/v3/businesses/search?location=${searchQuery}&term=restaurants&radius=1000`;
 
-// The `radius` parameter measures distance in meters.
+    // The `radius` parameter measures distance in meters.
 
     let yelpResults = await axios.get(url, {
-    	headers: {
+      headers: {
         Authorization: `bearer ${process.env.YELP_API_KEY}`
-    }
+      }
     });
 
     response.send(yelpResults.data);
-//    console.log(yelpResults.data);
+    //    console.log(yelpResults.data);
 
   } catch (error) {
     Promise.resolve().then(() => {

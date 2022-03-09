@@ -6,6 +6,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const getPinball = require('./pinball.js');
 const getRestaurants = require('./restaurants.js');
+const postUser = require('./managedUsers.js');
 
 const app = express();
 app.use(cors());
@@ -25,6 +26,8 @@ app.get('/restaurants', getRestaurants);
 app.get('/test', (request, response) => {
   response.status(200).send('test request received');
 });
+app.post('/user', postUser);
+
 
 app.get('*', (request, response) => {
   response.status(404).send('this is not what you were looking for');
