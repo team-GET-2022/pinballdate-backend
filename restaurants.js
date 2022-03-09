@@ -12,6 +12,8 @@ async function getRestaurants(request, response, next) {
 
     let url = `https://api.yelp.com/v3/businesses/search?location=${searchQuery}&term=restaurants&radius=1000`;
 
+// The `radius` parameter measures distance in meters.
+
     let yelpResults = await axios.get(url, {
     	headers: {
         Authorization: `bearer ${process.env.YELP_API_KEY}`
