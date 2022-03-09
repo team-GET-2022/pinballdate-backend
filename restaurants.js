@@ -1,3 +1,8 @@
+/* 
+This route accesses the Yelp API and sends raw search results from Yelp. 
+You can review the Yelp docs here: https://www.yelp.com/developers/documentation/v3/business_search
+*/
+
 const axios = require('axios');
 
 async function getRestaurants(request, response, next) {
@@ -5,12 +10,12 @@ async function getRestaurants(request, response, next) {
 
     let searchQuery = request.query.searchQuery;
 
-    let url = `https://api.yelp.com/v3/businesses/search?location=${searchQuery}&term=restaurants&radius=1000`; //works
+    let url = `https://api.yelp.com/v3/businesses/search?location=${searchQuery}&term=restaurants&radius=1000`;
 
     let yelpResults = await axios.get(url, {
-      headers: {
-        'Authorization' : 'Bearer fUNaVUUWgG2zgKrvXxeF7sLZj2ennSV-TxI7KxPxSKdd5gHXOIR5DBE3tVwfoZh4FbYGT0Qq2ga-m9sWiFUfg3ZrYH3cO7cwnGhZxQE_avLzDnni5TklYq8lYM4nYnYx'
-      }
+    	headers: {
+        Authorization: `bearer ${process.env.YELP_API_KEY}`
+    }
     });
 
     response.send(yelpResults.data);

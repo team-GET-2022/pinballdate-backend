@@ -1,7 +1,10 @@
+/*
+This route responds with raw search data from the Pinball Maps API. You can review 
+Pinball Maps' API docs here: https://pinballmap.com/api/v1/docs
+*/
 'use strict';
 
 const axios = require('axios');
-// const res = require('express/lib/response');
 
 async function getPinball(request, response, next) {
   try {
