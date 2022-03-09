@@ -5,6 +5,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const getPinball = require('./pinball.js');
+const getRestaurants = require('./restaurants.js');
 
 const app = express();
 app.use(cors());
@@ -20,7 +21,7 @@ db.once('open', function(){
 });
 
 app.get('/pinball', getPinball);
-
+app.get('/restaurants', getRestaurants);
 app.get('/test', (request, response) => {
   response.status(200).send('test request received');
 });
