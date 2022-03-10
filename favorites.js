@@ -48,7 +48,7 @@ async function postFavorite(request, response, next) {
 async function deleteFavorite(request, response, next) {
   let user = request.query.email;
   let dbLocation = request.query.locationId;
-
+  try {
     await User.findOneAndUpdate({
       email: user
     }, {
@@ -59,6 +59,11 @@ async function deleteFavorite(request, response, next) {
     )
 
   response.status(204).send("deleted favorite");
+  } catch {
+    Promise.resolve().then(() => {
+      throw new Error(error.message);
+    }).catch(next);
+  }
 }
 
 module.exports = { postFavorite, getFavorites, deleteFavorite };
