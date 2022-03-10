@@ -6,7 +6,7 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema({
   email: { type: String, required: true },
-  favoriteLocations: { type: Array, required: false },
+  favoriteLocations: [String],
 });
 
 const User = mongoose.model('User', userSchema);
