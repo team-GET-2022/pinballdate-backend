@@ -6,7 +6,7 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema({
   email: { type: String, required: true },
-  favoriteMachines: { type: Array, required: false },
+  favoriteLocations: { type: Array, required: false },
 });
 
 const User = mongoose.model('User', userSchema);
@@ -15,7 +15,7 @@ module.exports = User;
 
 // {
 //   "userEmail": "danb@gmail.com",
-//     "favoriteMachines":
+//     "favoriteLocations":
 //       [
 //         {
 //           "locationName": "T-Bird's",
