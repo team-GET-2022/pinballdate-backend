@@ -6,11 +6,11 @@ const User = require('./models/user.js');
 
 mongoose.connect(process.env.DATABASE_URL);
 
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function () {
-  console.log('Mongoose is connected');
-});
+// const db = mongoose.connection;
+// db.on('error', console.error.bind(console, 'connection error:'));
+// db.once('open', function () {
+//   console.log('Mongoose is connected');
+// });
 
 
 async function postUser(request, response, next) {
