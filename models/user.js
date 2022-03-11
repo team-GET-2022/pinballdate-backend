@@ -12,17 +12,3 @@ const userSchema = new Schema({
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
-
-// {
-//   "userEmail": "danb@gmail.com",
-//     "favoriteLocations":
-//       [
-//         {
-//           "locationName": "T-Bird's",
-//           "machineName": "Jurassic Park",
-//           "comments": "This game rules",
-//           "yourHighScore": "7533103"
-//         }
-
-//       ]
-// }
