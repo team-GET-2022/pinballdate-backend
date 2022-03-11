@@ -21,8 +21,6 @@ async function getRestaurants(request, response, next) {
     });
 
     response.send(yelpResults.data);
-    //    console.log(yelpResults.data);
-
   } catch (error) {
     Promise.resolve().then(() => {
       throw new Error(error.message);
