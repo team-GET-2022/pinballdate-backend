@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const getPinball = require('./pinball.js');
 const getRestaurants = require('./restaurants.js');
 
-const { postFavorite, getFavorites, deleteFavorite } = require('./favorites.js');
+const { postFavorite, getFavorites, putFavorite, deleteFavorite } = require('./favorites.js');
 
 const postUser = require('./manageUsers.js');
 const addOrRemoveFavorite = require('./favorites.js');
@@ -30,7 +30,8 @@ app.get('/restaurants', getRestaurants);
 
 app.get('/favorites', getFavorites);
 app.post('/favorites', postFavorite);
-app.delete('/favorites', deleteFavorite)
+app.put('/favorites', putFavorite);
+app.delete('/favorites', deleteFavorite);
 
 app.get('/test', (request, response) => {
   response.status(200).send('test request received');

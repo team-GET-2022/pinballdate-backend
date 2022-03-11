@@ -1,19 +1,16 @@
 'use strict';
 
-const axios = require('axios');
-const mongoose = require('mongoose');
-const { db } = require('./models/user.js');
 const User = require('./models/user.js');
-
-mongoose.connect(process.env.DATABASE_URL);
 
 
 //GET: Sends the list of favorites back to the frontend: 
 async function getFavorites(request, response, next) {
+  console.log(request.query.email);
   try {
-    let dbUser = await User.find({ email: request.query.email });
-    console.log(dbUser[0].favoriteLocations);
-    response.send(dbUser[0].favoriteLocations);
+    let dbUser = await User.findOne({ email: request.query.email });
+    console.log(dbUser);
+    console.log(dbUser.favoriteLocations);
+    response.send(dbUser.favoriteLocations);
   } catch (error) {
     Promise.resolve().then(() => {
       throw new Error(error.message);
@@ -21,51 +18,112 @@ async function getFavorites(request, response, next) {
   }
 }
 
-//POST: Adds a new favorite to a given user's favorites array
 async function postFavorite(request, response, next) {
+  console.log('from body', request.body.favoriteLocations);
   try {
-    console.log("help");
-    let dbUser = await User.find({ email: request.body.email });
-    let dbLocation = request.body.locationId;
-    console.log("Db user:", dbUser);
+    // Find EXACT object to update and push into favoriteLocations
+    let dataToUpdate = await User.findOne({ email: request.body.email });
+    console.log(dataToUpdate);
+    dataToUpdate.favoriteLocations.push(request.body.favoriteLocations);
 
-    dbUser[0].favoriteLocations.push(dbLocation);
-    response.send(200).send(`Favorite location ${dbLocation} added`);
+    // Put object with updated data.
+    let updatedData = await User.findByIdAndUpdate(dataToUpdate._id, dataToUpdate, { new: true, overwrite: true });
+    response.send(updatedData);
+  } catch (error) {
+    console.log('Error posting favorite');
+    next(error);
+  }
+}
+//POST: Adds a new favorite to a given user's favorites array
+// async function postFavorite(request, response, next) {
+//   let email = request.body.email;
+//   let favoriteLocation = request.body.favoriteLocations;
+//   try {
+//     await User.findOneAndUpdate({
+//       email: email
+//     }, {
+//       $push: {
+//         favoriteLocations: favoriteLocation
+//       }
+//     }
+//     )
+//     response.status(200).send("Added favorite");
+//   } catch(error) {
+//     next(error);
+//   }
+// }
 
-  } catch {
+async function putFavorite(request, response, next) {
+  let userEmail = request.query.email;
+  let dbLocation = request.body.id;
+  let score = request.body.score;
+  try {
+    let results = await User.findOne({ email: userEmail });
+    results.favoriteLocations.forEach((location, index) => {
+      if (location.id === dbLocation) {
+        results.favoriteLocations[index].score = score;
+      }
+    }
+    );
+    let updatedResults = await User.findByIdAndUpdate(results._id, results, { overwrite: true, new: true });
+    // await User.updateOne(
+    //   filter: {
+    //     email: userEmail,
+    //     favoriteLocations[id]: dbLocation
+    //   }, {
+    //    $update: { "favoriteLocations.$.note": note}
+    //   }
+
+    //   );
+    response.status(200).send(updatedResults);
+  } catch (error) {
+    next(error);
+  }
+}
+
+//DELETE:  Removes favorite from array of favorites
+async function deleteFavorite(request, response, next) {
+  let userEmail = request.query.email;
+  let locationId = +request.query.locationId;
+  console.log(locationId);
+  try {
+    let dataToUpdate = await User.findOne({ email: userEmail });
+    console.log(dataToUpdate.favoriteLocations);
+    let filteredLocations = dataToUpdate.favoriteLocations.filter(location => location.id !== locationId);
+    dataToUpdate.favoriteLocations = filteredLocations;
+    // await User.updateOne(
+    //   {
+    //     email: userEmail
+    //   }, {
+    //     $pull: { 'favoriteLocations': { id: dbLocation } }
+    //   });
+
+    // Put object with updated data.
+    let updatedData = await User.findByIdAndUpdate(dataToUpdate._id, dataToUpdate, { new: true, overwrite: true });
+    response.status(200).send(updatedData);
+  } catch (error) {
     Promise.resolve().then(() => {
       throw new Error(error.message);
     }).catch(next);
   }
 }
 
-//DELETE:  Removes favorite from array of favorites
-async function deleteFavorite(request, response, next) {
-  let dbUser = await User.find({ email: request.query.email });
-  let dbLocation = request.query.locationId;
+// [
+//   {
+//     "name": "Bard's Tavern",
+//     "id": "66666",
+//     "comment": "This place rules!"
+//   },
+//   {
+//     "name": "Comet Place",
+//     "id": "12345",
+//     "comment": "This place is okay!"
+//   },
+//   {
+//     "name": "Raxx",
+//     "id": "7777",
+//     "comment": "This place is a hole in the wall!"
+//   }
+// ]
 
-  console.log('Db location:', dbLocation);
-  console.log('Favorite locations: ', dbUser[0].favoriteLocations);
-
-  //Experiment: Can we make a local copy of the favorites, modify it, 
-  // and replace the entire Mongo array with our newFavorites? 
-  //Instead of trying to modify the array elements on mongo
-  let newFavorites = dbUser[0].favoriteLocations;
-  newFavorites.pull(dbLocation);
-  console.log('New Favorites: ',newFavorites);
-
-  let tempUserObject = dbUser;
-  
-  tempUserObject.favoriteLocations = newFavorites;
-
-  console.log("Temp user object:", tempUserObject);
-
-  User.findByIdAndUpdate(dbUser._id, tempUserObject);
-
-  //What we feel like SHOULD work:
-  // dbUser[0].favoriteLocations.remove(dbLocation);
-
-  response.status(204).send("deleted favorite");
-}
-
-module.exports = { postFavorite, getFavorites, deleteFavorite };
+module.exports = { postFavorite, getFavorites, putFavorite, deleteFavorite };
