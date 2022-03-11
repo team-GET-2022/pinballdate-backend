@@ -10,7 +10,7 @@ async function getPinball(request, response, next) {
   try {
     let searchQuery = request.query.searchQuery;
 
-    let url = `https://pinballmap.com/api/v1/locations/closest_by_address.json?send_all_within_distance=true;no_details=1;by_machine_id=2771;address=${searchQuery};max_distance=50`;
+    let url = `https://pinballmap.com/api/v1/locations/closest_by_address.json?send_all_within_distance=true;no_details=1;by_machine_id=2771;address=${searchQuery};max_distance=25`;
 
   // The `max_distance` parameter measures distance in miles.
 
