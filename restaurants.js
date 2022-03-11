@@ -10,7 +10,7 @@ async function getRestaurants(request, response, next) {
 
     let searchQuery = request.query.searchQuery;
 
-    let url = `https://api.yelp.com/v3/businesses/search?location=${searchQuery}&term=restaurants&radius=80467`;
+    let url = `https://api.yelp.com/v3/businesses/search?location=${searchQuery}&term=restaurants&radius=40000`;
 
     // The `radius` parameter measures distance in meters.
 
